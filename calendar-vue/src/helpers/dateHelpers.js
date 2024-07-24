@@ -11,14 +11,31 @@ export const convertTimeToUTC = (timeString) => {
 
     const date = new Date();
     date.setHours(hours, minutes, 0, 0);
-    console.log("changed date is ", date)
 
     const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-    console.log("utc date is ", utcDate)
 
-    // Format the UTC time as a string
     const utcHours = String(utcDate.getHours()).padStart(2, '0');
     const utcMinutes = String(utcDate.getMinutes()).padStart(2, '0');
 
     return `${utcHours}:${utcMinutes}`;
+}
+
+export const convertTimeToCurrentTimeZone = (timeString) => {
+    let [hours, minutes] = timeString.split(':');
+    let period = 'AM'
+
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0);
+
+    const currentTimeZoneTime = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+
+    let currentTimeZoneHours = String(currentTimeZoneTime.getHours()).padStart(2, '0');
+    const currentTimeZoneMinutes = String(currentTimeZoneTime.getMinutes()).padStart(2, '0');
+
+    if (currentTimeZoneHours >= '12') {
+        period = 'PM'
+        currentTimeZoneHours -= 12
+    }
+
+    return `${currentTimeZoneHours}:${currentTimeZoneMinutes}${period}`;
 }

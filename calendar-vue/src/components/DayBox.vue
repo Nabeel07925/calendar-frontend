@@ -7,7 +7,8 @@ export default {
   props: {
     selectedMonth: Number,
     selectedYear: Number,
-    day: Date
+    day: Date,
+    daySchedules: Array
   },
   methods: {
     getDescriptiveDay(day) {
@@ -29,7 +30,7 @@ export default {
 
 <template>
   <div class="border-[0.5px] border-gray-200 flex justify-center">
-    <div class="flex flex-col gap-1 mt-2">
+    <div class="flex flex-col gap-1 mt-2 w-full">
       <p v-if="showDayText(day)">
         {{ getDescriptiveDay(day.getDay()) }}
       </p>
@@ -39,6 +40,13 @@ export default {
         </div>
         <div class="ml-1">
           {{ day.getDate() }}
+        </div>
+      </div>
+      <div class="h-full flex flex-col gap-[0.8px] w-full">
+        <div v-for="schedule in daySchedules" class="flex w-full bg-green-700 rounded text-white text-xs">
+          <span class="ml-2">
+            {{ schedule.startTime }} {{schedule.meetingTitle}}
+          </span>
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import DayBox from "@/components/DayBox.vue";
 import NewSchedule from "@/components/NewSchedule.vue";
 import {api} from "@/services/api.js";
 import {schedule} from "@/constants/api_endpoints.js";
+import SchedulesMixin from "@/mixins/SchedulesMixin.vue";
 export default {
   name: "CalendarControl",
   components: {
@@ -24,10 +25,11 @@ export default {
       schedules: []
     }
   },
-  created() {
+  async created() {
     this.generateCalendar()
-    this.getSchedules()
+    await this.getSchedules()
   },
+  mixins: [SchedulesMixin],
   methods: {
     generateCalendar() {
       this.days = [];
@@ -46,9 +48,14 @@ export default {
       popup.openPopup(event.clientX, event.clientY, day);
     },
     async getSchedules() {
-      const schedules = await api.get(schedule)
-      console.log("schedules are ", schedules)
-    }
+      try {
+        const schedulesResponse = await api.get(schedule)
+        this.schedules = this.formatSchedules(schedulesResponse.data)
+      }
+      catch (err) {
+        console.log("error occured: ", err)
+      }
+    },
   }
 }
 </script>
@@ -61,6 +68,7 @@ export default {
           @click="showPopup($event, day)"
           :selected-month="selectedMonth" :selected-year="selectedYear" :day="day"
           :key="day"
+          :day-schedules="getFilteredSchedulesInDate(day, schedules)"
           v-for="day in days">
       </day-box>
     </div>

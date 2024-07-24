@@ -154,12 +154,6 @@ export default {
     closePopup() {
       this.visible = false
     },
-    choseStartTime(timeBlock) {
-      this.startTime = timeBlock
-    },
-    choseEndTime(timeBlock) {
-      this.endTime = timeBlock
-    },
     async saveEvent() {
       const meetingData = {
         title: this.title,
