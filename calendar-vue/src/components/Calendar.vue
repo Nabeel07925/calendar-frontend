@@ -5,7 +5,8 @@ import {
 } from 'date-fns';
 import DayBox from "@/components/DayBox.vue";
 import NewSchedule from "@/components/NewSchedule.vue";
-
+import {api} from "@/services/api.js";
+import {schedule} from "@/constants/api_endpoints.js";
 export default {
   name: "CalendarControl",
   components: {
@@ -19,11 +20,13 @@ export default {
       selectedYear: new Date().getFullYear(),
       clickedDate: null,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      days: []
+      days: [],
+      schedules: []
     }
   },
   created() {
     this.generateCalendar()
+    this.getSchedules()
   },
   methods: {
     generateCalendar() {
@@ -37,12 +40,14 @@ export default {
       }
     },
     showPopup(event, day) {
-      console.log("event is ", day)
       const popup = this.$refs.schedulePopup;
       const formattedDate = new Date(day)
       this.clickedDate = formattedDate.toISOString().slice(0, 10);
-      // const rect = event.target.getBoundingClientRect();
       popup.openPopup(event.clientX, event.clientY, day);
+    },
+    async getSchedules() {
+      const schedules = await api.get(schedule)
+      console.log("schedules are ", schedules)
     }
   }
 }

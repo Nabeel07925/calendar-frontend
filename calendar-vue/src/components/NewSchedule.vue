@@ -4,6 +4,7 @@ import clock from "../assets/clock.png";
 import axios from "axios";
 import {BASE_URL, meeting, schedule} from "@/constants/api_endpoints.js";
 import {api} from "@/services/api.js";
+import {convertTimeToUTC} from "@/helpers/dateHelpers.js";
 
 export default {
   name: "NewSchedule",
@@ -19,7 +20,7 @@ export default {
       allDay: true,
       repeat: false,
       guests: [],
-      startTime: null,    //{hour: 0, min: 0, timeOfDay: 'am' }
+      startTime: null,    //{hour: 0, min: 0, period: 'am' }
       endTime: null,
       startTimeIntervals: [
         {hour: 12, minute: 0, period: "AM"},
@@ -166,12 +167,13 @@ export default {
       }
       try {
         const response = await api.post(meeting, meetingData);
-        console.log('Meeting saved', response.data);
+        const start_time_tz_user = `${this.startTime.hour}:${this.startTime.minute} ${this.startTime.period}`
+        const end_time_tz_user = `${this.endTime.hour}:${this.endTime.minute} ${this.endTime.period}`
         const scheduleData = {
           date: this.date,
-          start_time: `${this.startTime.hour}:${this.startTime.minute}`,
-          end_time: `${this.endTime.hour}:${this.endTime.minute}`,
-          meeting_id: response.data.id
+          start_time: convertTimeToUTC(start_time_tz_user),
+          end_time: convertTimeToUTC(end_time_tz_user),
+          meeting: response.data.id
         }
         const responseSchedule = await api.post(schedule, scheduleData);
         console.log("Schedule response is ", responseSchedule)
@@ -213,6 +215,9 @@ export default {
               </option>
             </select>
             <br/>
+            <input v-model="description" type="text" placeholder="Add description or attachments"
+                   class="w-full border-0 border-b-2 text-sm mb-2 p-1 "/>
+
             <div class="flex justify-end">
               <button @click="saveEvent" class="bg-blue-500 text-white p-2 rounded">Save</button>
               <button @click="closePopup" class="ml-2 p-2 rounded">Cancel</button>
