@@ -1,0 +1,33 @@
+/*@import './base.css';*/
+
+#app {
+    font-family: "Google Sans", Roboto, Arial, sans-serif;
+    height: 100%;
+    /*max-width: 1280px;*/
+    /*margin: 0 auto;*/
+    /*padding: 2rem;*/
+    /*font-weight: normal;*/
+}
+
+html, body {
+    /*height: 100%;*/
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1.6;
+    font-family: Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
+    font-size: 15px;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
