@@ -127,6 +127,9 @@ export default {
   },
   computed: {
     endTimeIntervals() {
+      if (!this.startTime)
+        return this.startTimeIntervals
+
       const startHour = this.startTime.hour;
       const startMinute = this.startTime.minute;
       const startPeriod = this.startTime.period;
@@ -187,26 +190,30 @@ export default {
        class="z-[100] absolute bg-white border rounded shadow-lg min-h-[40%] min-w-[35%]">
     <div class="flex text-lg flex-col">
       <div class="w-full bg-gray-100 flex h-[35px] justify-end items-center">
-        <img :src="crossIcon" alt="x" width="50px"/>
+        <img src="@/assets/close-116-64.png" alt="x" width="20px" class="mr-3 cursor-pointer"
+             @click="closePopup"
+        />
       </div>
       <div class="flex gap-4">
         <div class="my-2 mr-3">
-          <input v-model="title" type="text" placeholder="Add title and time"
-                 class="w-2/3 ml-20 border-t-0 text-2xl mb-2 p-1 border rounded"/>
+          <div class="ml-20">
+            <input v-model="title" type="text" placeholder="Add title and time"
+                   class="w-full border-0 border-b-2 text-2xl mb-2 p-1 rounded"/>
+          </div>
           <!--          <img :src="clock" alt="clock"/>-->
           <div class="ml-20 flex flex-col gap-2">
             <input :value="date" type="date" class="w-full mb-2 p-1 border rounded"/>
             <label>Start Time</label>
             <select v-model="startTime">
               <option v-for="startTimeItem in startTimeIntervals" :key="startTimeItem" :value="startTimeItem">
-                {{ startTimeItem.hour }}:{{ startTimeItem.minute }}{{ startTimeItem.period }}
+                {{ startTimeItem.hour }}:{{ startTimeItem.minute > 0 ? startTimeItem.minute : '00' }}{{ startTimeItem.period }}
               </option>
             </select>
             <br/>
             <label>End Time</label>
             <select v-model="endTime">
               <option v-for="endTimeItem in endTimeIntervals" :key="endTimeItem" :value="endTimeItem">
-                {{ endTimeItem.hour }}:{{ endTimeItem.minute }}{{ endTimeItem.period }}
+                {{ endTimeItem.hour }}:{{ endTimeItem.minute > 0 ? endTimeItem.minute : '00' }}{{ endTimeItem.period }}
               </option>
             </select>
             <br/>

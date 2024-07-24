@@ -1,6 +1,7 @@
 <script>
 import {DayMapping, MonthMapping} from "@/constants/dates.js";
 import {getMonth, getWeekOfMonth, getYear} from "date-fns";
+import DatesMixin from "@/mixins/DatesMixin.vue";
 
 export default {
   name: "DayBox",
@@ -10,19 +11,14 @@ export default {
     day: Date,
     daySchedules: Array
   },
+  mixins: [DatesMixin],
   methods: {
-    getDescriptiveDay(day) {
-      return DayMapping[day]
-    },
     showDayText(day) {
       return (getWeekOfMonth(day) == 1 && getMonth(day) == this.selectedMonth && getYear(day) == this.selectedYear) || day < new Date(this.selectedYear, this.selectedMonth, 1)
     },
     getMonthText(day) {
-      const month = this.getMonth(day)
-      return MonthMapping[month]
-    },
-    getMonth(day) {
-      return getMonth(day)
+      const month = getMonth(day)
+      return this.getDescriptiveMonth(month)
     }
   }
 }
@@ -30,7 +26,7 @@ export default {
 
 <template>
   <div class="border-[0.5px] border-gray-200 flex justify-center">
-    <div class="flex flex-col gap-1 mt-2 w-full">
+    <div class="flex flex-col items-center gap-1 mt-2 w-full">
       <p v-if="showDayText(day)">
         {{ getDescriptiveDay(day.getDay()) }}
       </p>

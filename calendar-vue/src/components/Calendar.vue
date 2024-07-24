@@ -1,18 +1,21 @@
 <script>
 import {
   startOfWeek,
-  addDays,
+  addDays, addMonths, addYears, subYears, subMonths,
 } from 'date-fns';
 import DayBox from "@/components/DayBox.vue";
 import NewSchedule from "@/components/NewSchedule.vue";
 import {api} from "@/services/api.js";
 import {schedule} from "@/constants/api_endpoints.js";
 import SchedulesMixin from "@/mixins/SchedulesMixin.vue";
+import CalendarHeader from "@/components/CalendarHeader.vue";
+
 export default {
   name: "CalendarControl",
   components: {
     DayBox,
-    NewSchedule
+    NewSchedule,
+    CalendarHeader
   },
   data() {
     return {
@@ -45,17 +48,35 @@ export default {
     showPopup(event, day) {
       const popup = this.$refs.schedulePopup;
       const formattedDate = new Date(day)
-      this.clickedDate = formattedDate.toISOString().slice(0, 10);
+      const year = formattedDate.getFullYear();
+      const month = (formattedDate.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+      const dayOfMonth = formattedDate.getDate().toString().padStart(2, '0');
+
+      this.clickedDate = `${year}-${month}-${dayOfMonth}`;
       popup.openPopup(event.clientX, event.clientY, day);
     },
     async getSchedules() {
       try {
         const schedulesResponse = await api.get(schedule)
         this.schedules = this.formatSchedules(schedulesResponse.data)
-      }
-      catch (err) {
+      } catch (err) {
         console.log("error occured: ", err)
       }
+    },
+    changeMonth(forward) {
+      let newDate = null
+      const dateOfSelectedMonth = new Date(this.selectedYear, this.selectedMonth, 1)
+
+      if (forward) {
+        newDate = addMonths(dateOfSelectedMonth, 1)
+      }
+      else {
+        newDate = subMonths(dateOfSelectedMonth, 1)
+      }
+      this.selectedMonth = newDate.getMonth()
+      this.selectedYear = newDate.getFullYear()
+      this.generateCalendar()
+      console.log("slected month and year ", this.selectedMonth, this.selectedYear)
     },
   }
 }
@@ -64,6 +85,11 @@ export default {
 <template>
   <!--  <div>-->
   <div class="w-full h-full text-xs text-gray-600">
+    <calendar-header
+        :selected-month="selectedMonth"
+        :selectedYear="selectedYear"
+        @change-month="changeMonth"
+    />
     <div class="grid grid-cols-7 h-full mx-3">
       <day-box
           @click="showPopup($event, day)"
@@ -75,7 +101,7 @@ export default {
     </div>
     <new-schedule ref="schedulePopup"
                   @scheduleAdded="getSchedules"
-                  :date="clickedDate" @save-event="addEvent"
+                  :date="clickedDate"
     />
   </div>
 </template>
