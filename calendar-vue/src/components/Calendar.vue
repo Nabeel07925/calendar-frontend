@@ -30,6 +30,7 @@ export default {
     await this.getSchedules()
   },
   mixins: [SchedulesMixin],
+  events: ['scheduleAdded'],
   methods: {
     generateCalendar() {
       this.days = [];
@@ -72,7 +73,10 @@ export default {
           v-for="day in days">
       </day-box>
     </div>
-    <new-schedule ref="schedulePopup" :date="clickedDate" @save-event="addEvent"/>
+    <new-schedule ref="schedulePopup"
+                  @scheduleAdded="getSchedules"
+                  :date="clickedDate" @save-event="addEvent"
+    />
   </div>
 </template>
 

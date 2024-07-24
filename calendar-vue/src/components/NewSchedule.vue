@@ -167,9 +167,10 @@ export default {
           date: this.date,
           start_time: convertTimeToUTC(start_time_tz_user),
           end_time: convertTimeToUTC(end_time_tz_user),
-          meeting: response.data.id
+          meeting_id: response.data.id
         }
         const responseSchedule = await api.post(schedule, scheduleData);
+        this.$emit('scheduleAdded')
         console.log("Schedule response is ", responseSchedule)
         this.closePopup();
       } catch (error) {
