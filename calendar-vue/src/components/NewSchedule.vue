@@ -1,7 +1,4 @@
 <script>
-import crossIcon from "@/assets/close-116-64.png";
-import clock from "../assets/clock.png";
-import axios from "axios";
 import {BASE_URL, meeting, schedule} from "@/constants/api_endpoints.js";
 import {api} from "@/services/api.js";
 import {convertTimeToUTC} from "@/helpers/dateHelpers.js";
@@ -163,14 +160,14 @@ export default {
         description: this.description
       }
       try {
-        const response = await api.post(meeting, meetingData);
+        // const response = await api.post(meeting, meetingData);
         const start_time_tz_user = `${this.startTime.hour}:${this.startTime.minute} ${this.startTime.period}`
         const end_time_tz_user = `${this.endTime.hour}:${this.endTime.minute} ${this.endTime.period}`
         const scheduleData = {
+          meeting: meetingData,
           date: this.date,
           start_time: convertTimeToUTC(start_time_tz_user),
-          end_time: convertTimeToUTC(end_time_tz_user),
-          meeting_id: response.data.id
+          end_time: convertTimeToUTC(end_time_tz_user)
         }
         const responseSchedule = await api.post(schedule, scheduleData);
         this.$emit('scheduleAdded')
@@ -187,7 +184,7 @@ export default {
 
 <template>
   <div v-if="visible" :style="{ top: `${position.top}px`, left: `${position.left}px` }"
-       class="z-[100] absolute bg-white border rounded shadow-lg min-h-[40%] min-w-[35%]">
+       class="z-[100] absolute bg-white border rounded shadow-lg min-h-[20%] min-w-[25%]">
     <div class="flex text-lg flex-col">
       <div class="w-full bg-gray-100 flex h-[35px] justify-end items-center">
         <img src="@/assets/close-116-64.png" alt="x" width="20px" class="mr-3 cursor-pointer"
@@ -195,7 +192,7 @@ export default {
         />
       </div>
       <div class="flex gap-4">
-        <div class="my-2 mr-3">
+        <div class="my-2 mr-3 w-full">
           <div class="ml-20">
             <input v-model="title" type="text" placeholder="Add title and time"
                    class="w-full border-0 border-b-2 text-2xl mb-2 p-1 rounded"/>

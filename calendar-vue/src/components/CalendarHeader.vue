@@ -9,9 +9,14 @@ export default {
 </script>
 
 <template>
-  <div class="mx-4 w-full">
+  <div class="mx-4 my-3 w-full">
     <div class="flex items-center justify-evenly w-full">
-      <h1 class="text-2xl">
+      <img
+          src="https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_29_2x.png"
+          alt="cal-img"
+          width="40px"
+      />
+      <h1 class="text-2xl text-gray-800">
         Calendar
       </h1>
       <p class="border-gray-300 text-sm border-[1px] px-3 py-2 rounded">
